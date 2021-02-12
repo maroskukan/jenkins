@@ -71,11 +71,27 @@ mails_1    | 2021/02/12 12:16:22 Serving under http://0.0.0.0:8025/
 mails_1    | [HTTP] Binding to address: 0.0.0.0:8025
 ```
 
+```bash
+docker-compose ps
+      Name                     Command               State                  Ports
+------------------------------------------------------------------------------------------------
+compose_jenkins_1   /sbin/tini -- /usr/local/b ...   Up      50000/tcp, 127.0.0.1:8080->8080/tcp
+compose_mails_1     MailHog                          Up      1025/tcp, 127.0.0.1:8025->8025/tcp
+```
+
 Optinally, create a host name record of `jenkins` and `mail` mapped to `127.0.0.1`. For example:
 ```ini
 # To map jenkins to localhost
 127.0.0.1 jenkins
 127.0.0.1 mails
+```
+
+To cleanup use `docker-compose down`
+```
+docker-compose down
+Stopping compose_jenkins_1 ... done
+Stopping compose_mails_1   ... done
+Removing compose_jenkins_1 ... done
 ```
 
 
