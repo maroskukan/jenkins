@@ -8,6 +8,9 @@
     - [Plugin installation](#plugin-installation)
     - [Admin user](#admin-user)
     - [Instance Configuration](#instance-configuration)
+  - [Managing Jenkins](#managing-jenkins)
+    - [Web UI Layout](#web-ui-layout)
+    - [User settings](#user-settings)
 
 ## Introduction
 
@@ -82,6 +85,36 @@ The proposed default value shown is not saved yet and is generated from the curr
 If you are not sure, you can skip this step for now and adjust it at `Manage Jenkins` page in web UI.
 
 Complete the setup wizard by hitting the `Start using Jenkins`.
+
+## Managing Jenkins
+
+### Web UI Layout
+The main system configuration parameters are located at `Manage Jenkins` tab. Here you can find:
+- System Configuration
+- Security
+- Status Information
+- Troubleshooting
+- Tools and Actions
+
+### User settings
+You should start by creating a new user. Navigate to `Manage Jenkins > Security > Manage Users`. Hit `Create User`.By default, this new user can do anything, as you can see in `Manage Jenkins > Security > Configure Global Security > Authorization `.
+
+Plugins may augment the security settings, for example integrating with enterprise directory solutions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
