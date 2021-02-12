@@ -71,7 +71,12 @@ mails_1    | 2021/02/12 12:16:22 Serving under http://0.0.0.0:8025/
 mails_1    | [HTTP] Binding to address: 0.0.0.0:8025
 ```
 
-Optinally, create a host name record of `jenkins` mapped to `127.0.0.1`
+Optinally, create a host name record of `jenkins` and `mail` mapped to `127.0.0.1`. For example:
+```ini
+# To map jenkins to localhost
+127.0.0.1 jenkins
+127.0.0.1 mails
+```
 
 
 ## Initial Setup
