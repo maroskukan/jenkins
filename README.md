@@ -12,6 +12,8 @@
   - [Managing Jenkins](#managing-jenkins)
     - [Web UI Layout](#web-ui-layout)
     - [User settings](#user-settings)
+  - [Tips](#tips)
+    - [Inspecing Volume](#inspecing-volume)
 
 ## Introduction
 
@@ -106,6 +108,21 @@ You should start by creating a new user. Navigate to `Manage Jenkins > Security 
 
 Plugins may augment the security settings, for example integrating with enterprise directory solutions.
 
+
+## Tips
+
+### Inspecing Volume
+
+If you need to browse the created docker volume used for persistent file storage.
+```bash
+docker volume ls
+docker run -it --rm -v jenkins-home:/vol busybox ls -l /vol
+```
+
+If you need to browse the host volume, you can replace the volument mount with host directory name.
+```bash
+docker run -it --rm -v /path/on/host:/vol busybox ls -l /vol
+```
 
 
 
