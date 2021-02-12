@@ -4,6 +4,7 @@
   - [Introduction](#introduction)
   - [Documentation](#documentation)
   - [Installation](#installation)
+  - [Restart](#restart)
   - [Initial Setup](#initial-setup)
     - [Plugin installation](#plugin-installation)
     - [Admin user](#admin-user)
@@ -45,6 +46,10 @@ Once the container is initialize, proceed to `http://localhost:8080` to perform 
 docker exec -it 98ed cat /var/jenkins_home/secrets/initialAdminPassword
 446dd585cefe4a658381847ccc8232c0
 ```
+
+## Restart
+
+Once you perfrom the initial configuration described below, the settings are stored persistenly in docker volume. Therefore even if you restart the container this data ramains intact. This is especially useful during upgrades and experimenting with new version.
 
 
 ## Initial Setup
