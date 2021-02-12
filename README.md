@@ -5,6 +5,7 @@
   - [Documentation](#documentation)
   - [Installation](#installation)
   - [Restart](#restart)
+  - [Docker compose](#docker-compose)
   - [Initial Setup](#initial-setup)
     - [Plugin installation](#plugin-installation)
     - [Admin user](#admin-user)
@@ -52,6 +53,25 @@ docker exec -it 98ed cat /var/jenkins_home/secrets/initialAdminPassword
 ## Restart
 
 Once you perfrom the initial configuration described below, the settings are stored persistenly in docker volume. Therefore even if you restart the container this data ramains intact. This is especially useful during upgrades and experimenting with new version.
+
+## Docker compose
+
+You can use Docker compose files to create a small testing environment running on your machine. An example `docker-compose.yml` is available at `docker/compose` directory.
+
+```bash
+cd docker/compose
+docker-compose up
+Creating volume "compose_jenkins_home" with default driver
+Creating compose_mails_1   ... done
+Creating compose_jenkins_1 ... done
+Attaching to compose_mails_1, compose_jenkins_1
+mails_1    | 2021/02/12 12:16:22 Using in-memory storage
+mails_1    | 2021/02/12 12:16:22 [SMTP] Binding to address: 0.0.0.0:1025
+mails_1    | 2021/02/12 12:16:22 Serving under http://0.0.0.0:8025/
+mails_1    | [HTTP] Binding to address: 0.0.0.0:8025
+```
+
+Optinally, create a host name record of `jenkins` mapped to `127.0.0.1`
 
 
 ## Initial Setup
@@ -109,6 +129,7 @@ You should start by creating a new user. Navigate to `Manage Jenkins > Security 
 Plugins may augment the security settings, for example integrating with enterprise directory solutions.
 
 
+
 ## Tips
 
 ### Inspecing Volume
@@ -116,13 +137,17 @@ Plugins may augment the security settings, for example integrating with enterpri
 If you need to browse the created docker volume used for persistent file storage.
 ```bash
 docker volume ls
-docker run -it --rm -v jenkins-home:/vol busybox ls -l /vol
+docker run -it --rm -v jenkins_home:/vol busybox ls -l /vol
+total 104
+-rw-r--r--    1 1000     1000          1647 Feb 12 11:26 config.xml
+-rw-r--r--    1 1000     1000           100 Feb 12 11:25 copy_reference_file.log
+-rw-r--r--    1 1000     1000           156 Feb 12 11:26 hudson.model.UpdateCenter.xml
+-rw-r--r--    1 1000     1000          1243 Feb 12 11:14 hudson.plugins.emailext.ExtendedEmailPublisher.xml
+-rw-r--r--    1 1000     1000           370 Feb 12 10:55 hudson.plugins.git.GitTool.xml
+-rw-------    1 1000     1000          1712 Feb 12 10:31 identity.key.enc
+[ Output omitted ]
 ```
 
-If you need to browse the host volume, you can replace the volument mount with host directory name.
-```bash
-docker run -it --rm -v /path/on/host:/vol busybox ls -l /vol
-```
 
 
 

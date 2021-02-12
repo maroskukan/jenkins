@@ -1,17 +1,17 @@
 version: "3.8"
 
+volumes:
+  jenkins_home:
+
 services:
 
   jenkins:
     image: jenkins/jenkins:lts
     ports:
-    - "127.0.0.1:9080:8080"
+    - "127.0.0.1:8080:8080"
     volumes:
-    - ./jenkins_home_on_host:/var/jenkins_home
-    # using a bind mount to the host `./jenkins_home` means I can easily peruse the jenkins_home files without needing to "get into the container"
+    - jenkins_home:/var/jenkins_home
     restart: unless-stopped
-    # a named volume is fine too - jenkins_home:/var/jenkins_home
-
 
 
   # I like docker-compose because I can easily spin up multiple apps like a test email server alongside jenkins! for testing email notifications from jenkins (later)
