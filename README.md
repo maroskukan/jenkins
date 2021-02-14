@@ -13,6 +13,7 @@
   - [Managing Jenkins](#managing-jenkins)
     - [Web UI Layout](#web-ui-layout)
     - [User settings](#user-settings)
+  - [Freestyle Jobs](#freestyle-jobs)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
 
@@ -148,6 +149,20 @@ The main system configuration parameters are located at `Manage Jenkins` tab. He
 You should start by creating a new user. Navigate to `Manage Jenkins > Security > Manage Users`. Hit `Create User`.By default, this new user can do anything, as you can see in `Manage Jenkins > Security > Configure Global Security > Authorization `.
 
 Plugins may augment the security settings, for example integrating with enterprise directory solutions.
+
+
+## Freestyle Jobs
+
+Before you dive into Jenkins Freestyle project, lets review the usual process of application build cycle which may be composed of several steps:
+1. Clean the artifacts of previous build
+2. Locating the application code
+3. Downloading the application code to workspace folder
+4. Installing any build dependencies
+5. Building (compiling) the application
+6. Running automated tests
+7. Packaging the application
+
+Before you add build automation to your project, make sure the build itself works on your machine. Therefore in case of an issue, you are not dealing with two areas at the same time. 
 
 
 
