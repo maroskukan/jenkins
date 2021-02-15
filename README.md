@@ -14,6 +14,7 @@
     - [Web UI Layout](#web-ui-layout)
     - [User settings](#user-settings)
   - [Freestyle Jobs](#freestyle-jobs)
+    - [Petclinic](#petclinic)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
 
@@ -162,6 +163,7 @@ First, lets review the usual process of application build cycle which may be com
 6. Running automated tests
 7. Packaging the application
 
+### Petclinic
 Before you add build automation to your project, make sure the build itself works on your machine. Therefore in case of an issue, you are not dealing with two areas at the same time. 
 
 Start by getting a sample application code.
