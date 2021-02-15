@@ -153,7 +153,7 @@ Plugins may augment the security settings, for example integrating with enterpri
 
 ## Freestyle Jobs
 
-Before you dive into Jenkins Freestyle project, lets review the usual process of application build cycle which may be composed of several steps:
+First, lets review the usual process of application build cycle which may be composed of several steps:
 1. Clean the artifacts of previous build
 2. Locating the application code
 3. Downloading the application code to workspace folder
@@ -164,6 +164,118 @@ Before you dive into Jenkins Freestyle project, lets review the usual process of
 
 Before you add build automation to your project, make sure the build itself works on your machine. Therefore in case of an issue, you are not dealing with two areas at the same time. 
 
+Start by getting a sample application code.
+
+```bash
+git clone https://github.com/spring-projects/spring-petclinic.git
+cd spring-petclinic
+```
+
+**Note: You need to have Java installed before you can proceed further. For example:**
+```bash
+# Install Openjdk
+sudo apt install openjdk-11-jdk
+# Verify Java Version
+java --version
+openjdk 11.0.10 2021-01-19
+OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
+OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
+```
+
+Then using [Maven](https://maven.apache.org/), `compile` option, compile the source code. 
+```bash
+./mvnw compile
+Downloading https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.3.3/apache-maven-3.3.3-bin.zip
+........................................................................................................................................................................................................................................................................................................................................................................................................................
+Unzipping /home/maros/.m2/wrapper/dists/apache-maven-3.3.3-bin/3opbjp6rgl6qp7k2a6tljcpvgp/apache-maven-3.3.3-bin.zip to /home/maros/.m2/wrapper/dists/apache-maven-3.3.3-bin/3opbjp6rgl6qp7k2a6tljcpvgp
+Set executable permissions for: /home/maros/.m2/wrapper/dists/apache-maven-3.3.3-bin/3opbjp6rgl6qp7k2a6tljcpvgp/apache-maven-3.3.3/bin/mvn
+[INFO] Scanning for projects...
+Downloading: https://repo.maven.apache.org/maven2/io/spring/platform/platform-bom/2.0.6.RELEASE/platform-bom-2.0.6.RELEASE.pom
+Downloaded: https://repo.maven.apache.org/maven2/io/spring/platform/platform-bom/2.0.6.RELEASE/platform-bom-2.0.6.RELEASE.pom (40 KB at 57.6 KB/sec)
+...
+[ Output omitted ]
+...
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.690 s
+[INFO] Finished at: 2021-02-15T19:02:36+01:00
+[INFO] Final Memory: 25M/110M
+[INFO] ------------------------------------------------------------------------
+```
+
+Once the build is successful, a new `target` folder will be presented. To move to next phase, invoke `test` option.
+```bash
+./mvnw test
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< org.springframework.samples:spring-petclinic >------------
+[INFO] Building petclinic 2.4.2
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from spring-snapshots: https://repo.spring.io/snapshot/org/apache/maven/plugins/maven-surefire-plugin/2.22.2/maven-surefire-plugin-2.22.2.pom
+...
+[ Output omitted ]
+...
+[INFO]
+[INFO] Results:
+[INFO]
+[WARNING] Tests run: 40, Failures: 0, Errors: 0, Skipped: 1
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  44.944 s
+[INFO] Finished at: 2021-02-15T19:25:32+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+Finally, package the application with `package` option.
+```bash
+./mvnw package
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< org.springframework.samples:spring-petclinic >------------
+[INFO] Building petclinic 2.4.2
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from spring-snapshots: https://repo.spring.io/snapshot/org/apache/maven/plugins/maven-jar-plugin/3.2.0/maven-jar-plugin-3.2.0.pom
+Downloading from spring-milestones: https://repo.spring.io/milestone/org/apache/maven/plugins/maven-jar-plugin/3.2.0/maven-jar-plugin-3.2.0.pom
+...
+[ Output omitted ]
+...
+[INFO] Building jar: /home/maros/code/maroskukan/spring-petclinic/target/spring-petclinic-2.4.2.jar
+[INFO]
+[INFO] --- spring-boot-maven-plugin:2.4.2:repackage (repackage) @ spring-petclinic ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  42.810 s
+[INFO] Finished at: 2021-02-15T19:26:46+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+When all steps are successfull, you can run the application.
+```bash
+java -jar -Dserver.port=8081 target/spring-petclinic-2.4.2.jar
+
+
+              |\      _,,,--,,_
+             /,`.-'`'   ._  \-;;,_
+  _______ __|,4-  ) )_   .;.(__`'-'__     ___ __    _ ___ _______
+ |       | '---''(_/._)-'(_\_)   |   |   |   |  |  | |   |       |
+ |    _  |    ___|_     _|       |   |   |   |   |_| |   |       | __ _ _
+ |   |_| |   |___  |   | |       |   |   |   |       |   |       | \ \ \ \
+ |    ___|    ___| |   | |      _|   |___|   |  _    |   |      _|  \ \ \ \
+ |   |   |   |___  |   | |     |_|       |   | | |   |   |     |_    ) ) ) )
+ |___|   |_______| |___| |_______|_______|___|_|  |__|___|_______|  / / / /
+ ==================================================================/_/_/_/
+
+:: Built with Spring Boot :: 2.4.2
+
+
+2021-02-15 19:28:12.343  INFO 28297 --- [           main] o.s.s.petclinic.PetClinicApplication     : Starting PetClinicApplication v2.4.2 using Java 11.0.10 on slayer with PID 28297 (/home/maros/code/maroskukan/spring-petclinic/target/spring-petclinic-2.4.2.jar started by maros in /home/maros/code/maroskukan/spring-petclinic)
+```
+
+Petclic is now available at `http://localhost:8081/`. 
 
 
 ## Tips
