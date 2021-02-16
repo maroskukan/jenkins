@@ -18,6 +18,7 @@
     - [Jenkins Build](#jenkins-build)
       - [Capturing artifacts](#capturing-artifacts)
       - [Test result report](#test-result-report)
+  - [Build Triggers](#build-triggers)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -325,9 +326,37 @@ For Java based projects, it may be interesting to also capture the `JUnit test r
 Once you rerun the job, `Test Result` is available on the job summary.
 
 
+## Build Triggers
 
+So far, we have been triggering build manually from Jenkins console. In production, you will likely want to implement an automatic build trigger. 
 
+Based on approach you can select from these default options:
+- Trigger builds remotely (e.g. from scripts)
+- Build after other projects are built
+- Build periodically
+- GitHub hook trigger for GITScm pooling
+- Poll SCM
 
+You can also expand the options by installing appropriate plugins.
+
+For now select `Poll SCM` and configure a schedule. Once it is configured, a new menu item `Git Polling Log` will appear with content like this:
+
+```bash
+Started on Feb 16, 2021 3:04:00 PM
+Using strategy: Default
+[poll] Last Built Revision: Revision e2fbc561309d03d92a0958f3cf59219b1fc0d985 (refs/remotes/origin/main)
+The recommended git tool is: NONE
+No credentials specified
+ > git --version # timeout=10
+ > git --version # 'git version 2.11.0'
+ > git ls-remote -h -- https://github.com/spring-projects/spring-petclinic.git # timeout=10
+Found 3 remote heads on https://github.com/spring-projects/spring-petclinic.git
+[poll] Latest remote head revision on refs/heads/main is: e2fbc561309d03d92a0958f3cf59219b1fc0d985 - already built by 8
+Done. Took 1 sec
+No changes
+```
+
+Now, when you make a change to the source repository, Jenkins should pick that up and trigger a build.
 
 
 
