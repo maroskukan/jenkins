@@ -16,6 +16,8 @@
   - [Freestyle Jobs](#freestyle-jobs)
     - [Manual Build](#manual-build)
     - [Jenkins Build](#jenkins-build)
+      - [Capturing artifacts](#capturing-artifacts)
+      - [Test result report](#test-result-report)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -305,6 +307,36 @@ Once the first build is sucessfull, you can change the the build details, and pa
 ```bash
 ./mvnw package
 ```
+
+Once the application is packaged, the output should be available in the workspace directory. You verify this from project overview.
+
+#### Capturing artifacts
+
+When you run a job multiple times, the chance is that produced files will be overwritten by latest build. Therefore if you need to keep tham you need to configure `Post-build Actions`, within project configuration.
+
+An example of such Action could be `Archive the artifacts`. With the `Files to archive` set to `target/*.jar`. 
+
+Once you save the updated configuration, and run another build, the latest generated artifact will be available from main Project page, as well as on Build page.
+
+#### Test result report
+
+For Java based projects, it may be interesting to also capture the `JUnit test result report`. This is available in `Post-build Actions`. The `Test report XMLs` path is `target/surefire-reports/*.xml`
+
+Once you rerun the job, `Test Result` is available on the job summary.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
