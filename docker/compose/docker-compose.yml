@@ -1,7 +1,7 @@
 version: "3.8"
 
-volumes:
-  jenkins_home:
+# volumes:
+#   jenkins_home:
 
 services:
 
@@ -10,7 +10,9 @@ services:
     ports:
     - "127.0.0.1:8080:8080"
     volumes:
-    - jenkins_home:/var/jenkins_home
+    #- jenkins_home:/var/jenkins_home
+    - ./jenkins_home_on_host:/var/jenkins_home
+
     restart: unless-stopped
 
 
