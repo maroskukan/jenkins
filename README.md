@@ -14,7 +14,8 @@
     - [Web UI Layout](#web-ui-layout)
     - [User settings](#user-settings)
   - [Freestyle Jobs](#freestyle-jobs)
-    - [Petclinic](#petclinic)
+    - [Manual Build](#manual-build)
+    - [Jenkins Build](#jenkins-build)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
 
@@ -163,10 +164,10 @@ First, lets review the usual process of application build cycle which may be com
 6. Running automated tests
 7. Packaging the application
 
-### Petclinic
+### Manual Build
 Before you add build automation to your project, make sure the build itself works on your machine. Therefore in case of an issue, you are not dealing with two areas at the same time. 
 
-Start by getting a sample application code.
+Start by getting a sample application code for Spring Petclinic.
 
 ```bash
 git clone https://github.com/spring-projects/spring-petclinic.git
@@ -278,6 +279,33 @@ java -jar -Dserver.port=8081 target/spring-petclinic-2.4.2.jar
 ```
 
 Petclic is now available at `http://localhost:8081/`. 
+
+### Jenkins Build
+
+Start by creating a new `Job` or `Project` and select `Freestyle project`. Fill out the following fields in `General` tab:
+
+| Field          | Value                                                   |
+| -------------- | ------------------------------------------------------- |
+| Name           | Petclinic                                               |
+| Description    | Gotta Love Them                                         |
+| SCM            | Git                                                     |
+| Repository URL | https://github.com/spring-projects/spring-petclinic.git |
+
+At this stage, it is good to verify if Jenkins can access the required repository. You can do that from project overview, using `Build Now`. The first time you run the build it may fail due to default branch name change, such as `main` instead of `master`. This can be adjusted at job configuration.
+
+Once the job is defined a new `Workspace` folder is created inside `jenkins_home`. This is the place where all required files for project are stored.
+
+Next we need to define the `Build` process. We can add first build step using `Execute shell` option.
+```bash
+./mvnw compile
+```
+
+Once the first build is sucessfull, you can change the the build details, and package the application.
+```bash
+./mvnw package
+```
+
+
 
 
 ## Tips
