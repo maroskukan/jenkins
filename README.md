@@ -18,6 +18,7 @@
     - [Jenkins Build](#jenkins-build)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
+    - [Volume Permissions](#volume-permissions)
 
 ## Introduction
 
@@ -326,7 +327,20 @@ total 104
 [ Output omitted ]
 ```
 
+### Volume Permissions
 
+If you are experiencing permission errors with mapped folders such as:
+```bash
+jenkins_1  | touch: cannot touch '/var/jenkins_home/copy_reference_file.log': Permission denied
+jenkins_1  | Can not write to /var/jenkins_home/copy_reference_file.log. Wrong volume permissions?
+compose_jenkins_1 exited with code 0
+```
+
+You may need to change the folder owner ship on host machine
+```bash
+sudo chown -v -R 1000:1000 jenkins_home_on_host
+changed ownership of 'jenkins_home_on_host' from root:root to 1000:1000
+```
 
 
 
