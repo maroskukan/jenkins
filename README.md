@@ -20,10 +20,14 @@
       - [Test result report](#test-result-report)
   - [Build Triggers](#build-triggers)
   - [Pipeline Project](#pipeline-project)
+  - [Converting Freestyle to Pipeline](#converting-freestyle-to-pipeline)
+  - [Colocating Jobs and Source Code](#colocating-jobs-and-source-code)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
     - [Logging into container](#logging-into-container)
+    - [Running Petclinic from container](#running-petclinic-from-container)
+    - [Ace Editor Shortcuts](#ace-editor-shortcuts)
 
 ## Introduction
 
@@ -34,7 +38,7 @@ Jenkins is an open source automation server. It can help automate building, test
 
 - [Jenkins Project](https://www.jenkins.io/)
 - [Plugins Index](https://plugins.jenkins.io/)
-
+- [Pipeline Examples](http://jenkins.io/doc/pipeline/examples)
 
 ## Installation
 
@@ -373,7 +377,7 @@ Create a new item using `Pipeline` option. Name the item as `spc`. You will be p
 
 Pipiline tab is particularly internesting, it provides sample scripts that define the build process. For example `Github + Maven`.
 
-```
+```groovy
 pipeline {
     agent any
 
@@ -463,6 +467,50 @@ This definition will be encoded into Project configuration `/var/jenkins_home/jo
   <disabled>false</disabled>
 ```
 
+The easiest way to start creating a custom script is to take an example defined above and modify it according the current needs. Using `Snippet Generator` inside the `Pipeline Syntax` help is very useful in these situations.
+
+The following is a base skeleton for our project:
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Get some code from a GitHub repository
+                git url: 'https://github.com/maroskukan/spring-petclinic.git', branch: 'main' 
+            }
+        }
+        stage('Build') {
+            steps {
+                // Run Maven Wrapper
+                sh './mvnw clean package'
+          }
+          
+          post {
+              always {
+                  junit '**/target/surefire-reports/TEST-*.xml'
+                  archiveArtifacts 'target/*.jar'
+              }
+            }
+        }
+    }
+}
+```
+
+More Pipeline examples can be found at [Jenkins Docs](http://jenkins.io/doc/pipeline/examples)
+
+## Converting Freestyle to Pipeline
+
+There is a `Convert To Pipeline` plugin available that can convert a Freestyle project to Pipeline project. Once installed, navigate to a Freestyle project main page, and click `Convert to Pipeline`.
+
+## Colocating Jobs and Source Code
+
+It is possible to colocate pipeline script inside a version control system. One of the methods is to use `Jenkins Runner` vscode extension which allows you to locally available Jenkinsfile on remote jenkins server.
+
+Example configuration can be found in `.vscode/settings.json` file.
+
+
 ## Tips
 
 ### Inspecing Volume
@@ -504,7 +552,16 @@ If you need to inspect filesystem directly from running container you can use `d
 docker-compose exec jenkins bash
 ```
 
+### Running Petclinic from container
 
+When you generated an artifact during build you can quickly test it using `openjdk` container.
+```bash
+docker run --rm -p 8081:8081 -v "$PWD":/usr/src/myapp -w /usr/src/myapp openjdk java -jar -Dserver.port=8081 ./spring-petclinic-2.4.2.jar
+```
+
+### Ace Editor Shortcuts
+
+The embedded editor for Pipeline script uses ace editor. Some useful shortcuts can be found [here](https://ace.c9.io/demo/keyboard_shortcuts.html)
 
 
 
