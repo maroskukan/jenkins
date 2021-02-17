@@ -1,0 +1,21 @@
+version: "3.8"
+
+volumes:
+  jenkins_home:
+
+services:
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+    - "127.0.0.1:7080:8080"
+    volumes:
+    - jenkins_home:/var/jenkins_home
+
+    restart: unless-stopped
+
+  mails:
+    image: mailhog/mailhog
+    restart: unless-stopped
+    ports:
+    - "127.0.0.1:7025:8025"
