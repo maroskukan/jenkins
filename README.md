@@ -19,9 +19,11 @@
       - [Capturing artifacts](#capturing-artifacts)
       - [Test result report](#test-result-report)
   - [Build Triggers](#build-triggers)
+  - [Pipeline Project](#pipeline-project)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
+    - [Logging into container](#logging-into-container)
 
 ## Introduction
 
@@ -359,16 +361,107 @@ No changes
 Now, when you make a change to the source repository, Jenkins should pick that up and trigger a build.
 
 
+## Pipeline Project
 
+Freestyle job may not be well suited for more complex build processes that require conditions, and complex operations. A more flexible option is available using Pipelines.
 
+Create a new item using `Pipeline` option. Name the item as `spc`. You will be presented with the following tabs:
+- General
+- Build Triggers
+- Advanced Project Options
+- Pipeline
 
+Pipiline tab is particularly internesting, it provides sample scripts that define the build process. For example `Github + Maven`.
 
+```
+pipeline {
+    agent any
 
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
+    }
 
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/jglick/simple-maven-project-with-tests.git'
 
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
 
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+    }
+}
+```
 
+This definition will be encoded into Project configuration `/var/jenkins_home/jobs/spc/config.xml`as follows:
+
+```xml
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>jenkins@b60687a29ed0:~/jobs/spc$ cat config.xml
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.89">
+    <script>pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as &quot;M3&quot; and add it to the path.
+        maven &quot;M3&quot;
+    }
+
+    stages {
+        stage(&apos;Build&apos;) {
+            steps {
+                // Get some code from a GitHub repository
+                git &apos;https://github.com/jglick/simple-maven-project-with-tests.git&apos;
+
+                // Run Maven on a Unix agent.
+                sh &quot;mvn -Dmaven.test.failure.ignore=true clean package&quot;
+
+                // To run Maven on a Windows agent, use
+                // bat &quot;mvn -Dmaven.test.failure.ignore=true clean package&quot;
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit &apos;**/target/surefire-reports/TEST-*.xml&apos;
+                    archiveArtifacts &apos;target/*.jar&apos;
+                }
+            }
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+```
 
 ## Tips
 
@@ -403,6 +496,13 @@ sudo chown -v -R 1000:1000 jenkins_home_on_host
 changed ownership of 'jenkins_home_on_host' from root:root to 1000:1000
 ```
 
+### Logging into container
+
+If you need to inspect filesystem directly from running container you can use `docker exec`.
+
+```bash
+docker-compose exec jenkins bash
+```
 
 
 
