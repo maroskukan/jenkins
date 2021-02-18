@@ -23,6 +23,7 @@
   - [Converting Freestyle to Pipeline](#converting-freestyle-to-pipeline)
   - [Colocating Jobs and Source Code](#colocating-jobs-and-source-code)
     - [Build Triggers](#build-triggers-1)
+    - [Build Notifications](#build-notifications)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -525,6 +526,21 @@ Build Triggers allow you to define when to run a job. There are number of option
 - Trigger builds remotely (e.g. from scripts)
 
 This is similar to Freestyle project configuration, however since we are dealing with pipeline script, we can define these parameters inside it with the help of Declarative Generator.
+
+### Build Notifications
+
+In order to leverage email notification for intersting events (such as build failure) you first need to configure the `Extended E-mail Notification` in Jenkins `System Configuration`.
+
+| Name        |   Value |
+| ----------- | ------- |
+| SMTP Server | mails   |
+| SMTP Port   | 1025    |
+
+Also update the `Jenkins Location` if required.
+
+| Name        |   Value |
+| ----------- | ------- |
+| Jenkins URL | http://jenkins:7080/ |
 
 
 ## Tips
