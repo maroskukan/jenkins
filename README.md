@@ -22,6 +22,7 @@
   - [Pipeline Project](#pipeline-project)
   - [Converting Freestyle to Pipeline](#converting-freestyle-to-pipeline)
   - [Colocating Jobs and Source Code](#colocating-jobs-and-source-code)
+    - [Build Triggers](#build-triggers-1)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -485,13 +486,13 @@ pipeline {
             steps {
                 // Run Maven Wrapper
                 sh './mvnw clean package'
-          }
+            }
           
-          post {
+            post {
               always {
                   junit '**/target/surefire-reports/TEST-*.xml'
                   archiveArtifacts 'target/*.jar'
-              }
+                }
             }
         }
     }
@@ -506,9 +507,24 @@ There is a `Convert To Pipeline` plugin available that can convert a Freestyle p
 
 ## Colocating Jobs and Source Code
 
-It is possible to colocate pipeline script inside a version control system. One of the methods is to use `Jenkins Runner` vscode extension which allows you to locally available Jenkinsfile on remote jenkins server.
+It is possible to colocate pipeline script `ide/pipeline.groovy` outside of Jenins and inside a version control system or your local development machine . 
 
-Example configuration can be found in `.vscode/settings.json` file.
+One of the methods to develop locally is to use `Jenkins Runner` vscode extension which allows you to execute local pipeline script in remote Jenkins instance.
+
+Example configuration can be found in `.vscode/settings.json` file. To invoke this script, open command pallet in VScode `CTRL` + `Shift` + `P` and run `Jenkins Runner: Run Pipeline Script On Default Job`.
+
+### Build Triggers
+
+Build Triggers allow you to define when to run a job. There are number of options and parameters available:
+- Build after another projects are built
+- Build periodically
+- Github hook trigger for GITscm polling
+- Poll SCM
+- Disable this project
+- Quiet period
+- Trigger builds remotely (e.g. from scripts)
+
+This is similar to Freestyle project configuration, however since we are dealing with pipeline script, we can define these parameters inside it with the help of Declarative Generator.
 
 
 ## Tips
