@@ -25,6 +25,7 @@
     - [Build Triggers](#build-triggers-1)
     - [Build Notifications](#build-notifications)
     - [Jenkinsfile and SCM](#jenkinsfile-and-scm)
+    - [Dynamic Pipeline discovery](#dynamic-pipeline-discovery)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -561,8 +562,25 @@ In Jenkins UI, create a new item called `spc-jenkinsfile` with Pipeline type. De
 
 Save and initiate the first build. The Jenkins file will be automatically loaded from repository and defined actions will be executed.
 
+### Dynamic Pipeline discovery
 
+So far we always had to define and configure new items in Jenkins UI before we could initiate the build process. 
 
+If you have dynamic environment, where new projects are created and deleted on regular basis, it is recommended to add Github organization to jenkins, instead of individual repositories.
+
+This is accomplished by creating and configuring new item with type of `GitHub Organization`. The following minimum configuration is required.
+
+| Name        |   Value |
+| ----------- | ------- |
+| Name | org-mkukan |
+| API Endpoint | https://api.github.com |
+| Owner | maroskukan |
+| Behaviors | Discovered branches |
+| Pipeline Jenkinsfile | Jenkinsfile |
+
+Once you click `Save` Jenkins file scan the Organization/Account in Github, and create Job for any discovered repositories that contain Jenkinsfile.
+
+If you want to a self service capability, you could create a **Jenkins maintenance** repository where you would store the organization configuraiton and create a jenkins job to update itself when a change happens in the organization list file.
 
 
 ## Tips
