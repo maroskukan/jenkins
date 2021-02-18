@@ -12,13 +12,13 @@ pipeline {
             steps {
                 // Run Maven Wrapper
                 sh './mvnw clean package'
-          }
+            }
           
-          post {
+            post {
               always {
                   junit '**/target/surefire-reports/TEST-*.xml'
                   archiveArtifacts 'target/*.jar'
-              }
+                }
             }
         }
     }
