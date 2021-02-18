@@ -24,6 +24,7 @@
   - [Colocating Jobs and Source Code](#colocating-jobs-and-source-code)
     - [Build Triggers](#build-triggers-1)
     - [Build Notifications](#build-notifications)
+    - [Jenkinsfile and SCM](#jenkinsfile-and-scm)
   - [Tips](#tips)
     - [Inspecing Volume](#inspecing-volume)
     - [Volume Permissions](#volume-permissions)
@@ -541,6 +542,27 @@ Also update the `Jenkins Location` if required.
 | Name        |   Value |
 | ----------- | ------- |
 | Jenkins URL | http://jenkins:7080/ |
+
+### Jenkinsfile and SCM
+
+Another option is to fetch Pipeline configuration (Jenkinsfile) from source control manager, for example from Github.
+
+For this reason there is a new `Jenkisfile` in the test repository `maroskukan/spring-petclinic`.
+
+In Jenkins UI, create a new item called `spc-jenkinsfile` with Pipeline type. Define the following pipeline script configuration.
+
+| Name        |   Value |
+| ----------- | ------- |
+| Definition | Pipeline script from SCM |
+| SCM | Git |
+| Repositories | https://github.com/maroskukan/spring-petclinic |
+| Branch Specifier | */main |
+| Script Path | Jenkinsfile |
+
+Save and initiate the first build. The Jenkins file will be automatically loaded from repository and defined actions will be executed.
+
+
+
 
 
 ## Tips
